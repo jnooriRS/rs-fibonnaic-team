@@ -1,6 +1,0 @@
-black
-pre-commit
-pytest
-pip-audit
-trufflehog
-Flask

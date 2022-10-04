@@ -1,38 +1,36 @@
-pipeline {
-    agent {
-        docker { image 'ubuntu:latest' }
-   }
-   environment {
-       dockerImage =''
-       registry = 'asadmk97/rs-fibonnaic-team'
-       registryCredential ='d34d387c-0abe-4e39-9260-588e5ad529aa'
-   }
-  stages {
+node {
+    def app
 
-    stage("Build docker image") {
-      steps {
-        script {
-            dockerImage = docker.build registry
-        }
-      }
+    stage('Clone repository') {
+        /* Let's make sure we have the repository cloned to our workspace */
+
+        checkout scm
     }
-    // stage('Push image') {
-    //  steps {
-    //     script {
-    //         docker.withRegistry('https://registry.hub.docker.com', 'git') {
-    //         app.push("${env.BUILD_NUMBER}")
-    //         app.push("latest")
-    //         }
-    //     }
-    //   }
-    // }
-    //  stage ('Push to Docker') {
-    //     steps {
-    //         script {
-    //            docker.withRegistry( '', registryCredential ) {
-    //             dockerImage.push()
-    //            }
-    //         }
-    //     }
-    // }
-}}
+
+    stage('Build image') {
+        /* This builds the actual image; synonymous to
+         * docker build on the command line */
+
+        app = docker.build("getintodevops/hellonode")
+    }
+
+    stage('Test image') {
+        /* Ideally, we would run a test framework against our image.
+         * For this example, we're using a Volkswagen-type approach ;-) */
+
+        app.inside {
+            sh 'echo "Tests passed"'
+        }
+    }
+
+    stage('Push image') {
+        /* Finally, we'll push the image with two tags:
+         * First, the incremental build number from Jenkins
+         * Second, the 'latest' tag.
+         * Pushing multiple tags is cheap, as all the layers are reused. */
+        docker.withRegistry('https://registry.hub.docker.com', 'Dockerhub') {
+            app.push("${env.BUILD_NUMBER}")
+            app.push("latest")
+        }
+    }
+}
