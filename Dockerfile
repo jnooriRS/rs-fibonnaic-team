@@ -17,3 +17,5 @@ COPY . .
 EXPOSE 5000
 # Run 'python app.py' on container start-up. This is the main process.
 CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
+
+# docker run --publish 8000:5000 docker-asad

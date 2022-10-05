@@ -1,5 +1,4 @@
-from flask import Flask
-from flask import render_template, request
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -19,7 +18,7 @@ def fib_find(N):
     return fib_num
 
 
-@app.route("/home", methods=["POST", "GET"])
+@app.route("/home/", methods=["POST", "GET"])
 def fib_converter():
     if request.method == "POST":
         user_input = request.form["number"]
@@ -33,4 +32,11 @@ def fib_converter():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8000)
+    app.run(debug=True, host="0.0.0.0", port=5000)
+
+
+
+
+
+
+
