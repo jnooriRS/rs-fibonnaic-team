@@ -28,6 +28,7 @@ pipeline {
         stage('Push image') {
             steps {
                 script {
+                    -Dorg.jenkinsci.plugins.durabletask.BourneShellScript.LAUNCH_DIAGNOSTICS=true
                     docker.withRegistry('https://registry.hub.docker.com', 'Dockerhub') {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("latest")
