@@ -1,8 +1,7 @@
 pipeline {
-    // agent {
-    //     docker { image 'ubuntu:latest' }
-    // }
-    
+    agent {
+        any
+    }
     environment {
        app =''
     }
@@ -12,9 +11,7 @@ pipeline {
             steps {
                 checkout scm
             }
-            
         }
-
         stage('Build image') {
             /* This builds the actual image; synonymous to
             * docker build on the command line */
@@ -24,11 +21,10 @@ pipeline {
                 }
             }
         }
-
         stage('Push image') {
             steps {
                 script {
-                        docker.withRegistry('https://registry.hub.docker.com', 'Dockerhub') {
+                    docker.withRegistry('https://registry.hub.docker.com', 'Dockerhub') {
                         app.push("${env.BUILD_NUMBER}")
                         app.push("latest")
                     }
